@@ -99,7 +99,6 @@ async function handleLogin() {
 
     router.push({ name: 'home' })
   } catch (error) {
-    console.log(error)
     if (error.data && typeof error.data === 'object') {
       Object.keys(error.data).forEach((field) => {
         errors.value[field] = error.data[field]

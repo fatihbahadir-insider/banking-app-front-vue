@@ -10,6 +10,26 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => !!token.value && !!user.value)
 
+  function isTokenValid() {
+    if (!token.value) return false
+
+    try {
+      const { payload } = useJwt(ref(token.value))
+      const exp = payload.value?.exp
+
+      if (!exp) return false
+      return Date.now() < exp * 1000
+    } catch {
+      return false
+    }
+  }
+
+  function initializeAuth() {
+    if (token.value && !isTokenValid()) {
+      logout()
+    }
+  }
+
   async function login(credentials) {
     isLoading.value = true
     try {
@@ -60,6 +80,8 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     isLoading,
     isAuthenticated,
+    isTokenValid,
+    initializeAuth,
     login,
     logout,
     fetchUser,
