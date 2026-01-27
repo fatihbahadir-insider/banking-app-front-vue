@@ -6,7 +6,10 @@
     <div class="px-6 py-4">
       <slot />
     </div>
-    <div v-if="$slots.footer" class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+    <div
+      v-if="$slots.footer"
+      class="px-6 py-4 border-t border-gray-200 bg-gray-50"
+    >
       <slot name="footer" />
     </div>
   </div>
@@ -34,4 +37,3 @@ const cardClasses = computed(() => {
   return `${baseClasses} ${shadowClasses[props.shadow]}`
 })
 </script>
-

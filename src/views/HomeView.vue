@@ -10,6 +10,8 @@
     <div v-else class="mt-8 text-gray-500">
       No user logged in
     </div>
+    <BalanceCard :balance="dashboardStore.balance" />
+    <Userslist :users="dashboardStore.users" />
     <button @click="handleLogout">
       Logout
     </button>
@@ -18,13 +20,21 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/useAuthStore'
+import { useDashboardStore } from '@/stores/useDashboardStore'
 import { useRouter } from 'vue-router'
+import { onMounted } from 'vue'
+import BalanceCard from '@/components/dashboard/BalanceCard.vue'
+import Userslist from '@/components/dashboard/Userslist.vue'
 
-const authStore = useAuthStore()
 const router = useRouter()
+const authStore = useAuthStore()
+const dashboardStore = useDashboardStore()
 
+onMounted(() => {
+  dashboardStore.fetchAll()
+})
 
-const handleLogout = () => {
+async function handleLogout() {
   authStore.logout()
   router.push({ name: 'login' })
 }
