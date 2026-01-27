@@ -10,12 +10,22 @@
     <div v-else class="mt-8 text-gray-500">
       No user logged in
     </div>
+    <button @click="handleLogout">
+      Logout
+    </button>
   </div>
 </template>
 
 <script setup>
 import { useAuthStore } from '@/stores/useAuthStore'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
-console.log(authStore.user);
+const router = useRouter()
+
+
+const handleLogout = () => {
+  authStore.logout()
+  router.push({ name: 'login' })
+}
 </script>

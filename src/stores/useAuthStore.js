@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import api from '../services/api'
 import { useJwt } from '@vueuse/integrations/useJwt'
+import router from '@/router'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
@@ -24,9 +25,42 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function initializeAuth() {
-    if (token.value && !isTokenValid()) {
-      logout()
+  async function initializeAuth() {
+    if (!token.value) return false
+
+    isLoading.value = true
+    try {
+      if (!isTokenValid()) {
+        const refreshed = await refreshAccessToken()
+        if (!refreshed) {
+          await logout()
+          return false
+        }
+      }
+
+      await fetchUser()
+      return true
+    } catch (error) {
+      console.error('Auth initialization failed:', error)
+      await logout()
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function refreshAccessToken() {
+    if (!token.value) {
+      return false
+    }
+
+    try {
+      const newToken = await api.refreshAccessToken()
+      token.value = newToken
+      return true
+    } catch (error) {
+      console.error('Token refresh failed:', error)
+      return false
     }
   }
 
@@ -34,16 +68,11 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = true
     try {
       const response = await api.post('/auth/login', credentials)
-      const { payload } = useJwt(ref(response.data.token))
 
       token.value = response.data.token
-      user.value = {
-        id: payload.value.issuer,
-      }
+      localStorage.setItem('token', token.value)
 
-      if (token.value) {
-        localStorage.setItem('token', token.value)
-      }
+      await fetchUser()
       return response
     } catch (error) {
       console.error('Login error: ', error)
@@ -57,6 +86,7 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = null
     user.value = null
     localStorage.removeItem('token')
+    router.push({ name: 'login' })
   }
 
   async function fetchUser() {
@@ -64,8 +94,12 @@ export const useAuthStore = defineStore('auth', () => {
 
     isLoading.value = true
     try {
-      const response = await api.get('/auth/me')
-      user.value = response.user
+      const response = await api.get('/users/me', {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      })
+      user.value = response.data
       return response
     } catch (error) {
       await logout()
@@ -81,6 +115,7 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading,
     isAuthenticated,
     isTokenValid,
+    refreshAccessToken,
     initializeAuth,
     login,
     logout,
