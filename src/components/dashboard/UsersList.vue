@@ -14,7 +14,7 @@
         <div
           class="w-12 h-12 rounded-[50%] bg-gradient-to-r from-[#667eea] to-[#764ba2] flex items-center justify-center text-white font-semibold text-[14px]"
         >
-          {{ getInitials(user.name) }}
+          {{ user.username?.[0].toUpperCase() }}
         </div>
         <div class="flex-1 flex flex-col gap-0.5">
           <span class="font-semibold color-[#1a1a2e] text-[14px]">
@@ -45,7 +45,6 @@
 </template>
 
 <script setup>
-import { getInitials } from '@/utils/strings'
 defineProps({
   users: {
     type: Array,

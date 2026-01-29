@@ -15,3 +15,17 @@ export function formatDate(dateString) {
     minute: '2-digit',
   })
 }
+
+export function formatAmount(transaction, userId) {
+  const amount = new Intl.NumberFormat('tr-TR', {
+    style: 'currency',
+    currency: 'TRY',
+  }).format(transaction.amount)
+
+  if (transaction.type === 'deposit') return `+${amount}`
+  if (transaction.type === 'withdraw') return `-${amount}`
+  if (transaction.type === 'transfer') {
+    return transaction.from_user_id === userId ? `-${amount}` : `+${amount}`
+  }
+  return amount
+}

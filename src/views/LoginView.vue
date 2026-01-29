@@ -33,7 +33,7 @@
         Don't have an account?
         <RouterLink
           :to="{ name: 'register' }"
-          class="text-blue-600 hover:text-blue-500"
+          class="text-[#667eea] hover:text-[#5a6fd6]"
         >
           Register
         </RouterLink>

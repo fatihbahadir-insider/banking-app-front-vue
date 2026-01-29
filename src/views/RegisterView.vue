@@ -40,7 +40,7 @@
         Already have an account?
         <RouterLink
           :to="{ name: 'login' }"
-          class="text-blue-600 hover:text-blue-500"
+          class="text-[#667eea] hover:text-[#5a6fd6]"
         >
           Login
         </RouterLink>

@@ -1,30 +1,55 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Banking App</h1>
+  <div class="min-h-screen bg-[#f0f2f5] p-6">
+    <header class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="m-0 text-3xl font-bold text-[#1a1a2e]">
+          Welcome, {{ authStore.user?.username }} 👋
+        </h1>
+        <p class="mt-1 m-0 text-[#6c757d] text-[14px]">
+          Here is your account summary
+        </p>
+      </div>
+      <button
+        class="px-6 py-3 bg-white border border-[#e0e0e0] rounded-[12px] text-[14px] font-[500] cursor-pointer transition-all duration-200 hover:bg-[#f8f9fa] hover:border-[#764ba2] hover:text-[#764ba2]"
+        @click="handleLogout"
+      >
+        Logout
+      </button>
+    </header>
 
-    <div v-if="authStore.user" class="mt-8">
-      <h2 class="text-xl font-semibold text-gray-700 mb-4">User Information</h2>
-      <pre class="bg-gray-100 p-4 rounded-lg overflow-auto">{{ JSON.stringify(authStore.user, null, 2) }}</pre>
+    <div
+      v-if="dashboardStore.isLoading"
+      class="flex flex-col items-center justify-center min-h-[400px] gap-4"
+    >
+      <div
+        class="w-12 h-12 border border-[#e0e0e0] rounded-full animate-spin"
+      ></div>
+      <p>Loading...</p>
     </div>
 
-    <div v-else class="mt-8 text-gray-500">
-      No user logged in
+    <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="flex flex-col gap-6">
+        <BalanceCard :balance="dashboardStore.balance" />
+        <TransactionsList :transactions="dashboardStore.transactions" />
+      </div>
+
+      <div class="flex flex-col gap-6">
+        <QuickActions @action="handleAction" />
+        <UsersList :users="dashboardStore.users" />
+      </div>
     </div>
-    <BalanceCard :balance="dashboardStore.balance" />
-    <Userslist :users="dashboardStore.users" />
-    <button @click="handleLogout">
-      Logout
-    </button>
   </div>
 </template>
 
 <script setup>
-import { useAuthStore } from '@/stores/useAuthStore'
-import { useDashboardStore } from '@/stores/useDashboardStore'
-import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
-import BalanceCard from '@/components/dashboard/BalanceCard.vue'
-import Userslist from '@/components/dashboard/Userslist.vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/useAuthStore'
+import { useDashboardStore } from '../stores/useDashboardStore'
+import BalanceCard from '../components/dashboard/BalanceCard.vue'
+import UsersList from '../components/dashboard/UsersList.vue'
+import TransactionsList from '../components/dashboard/TransactionsList.vue'
+import QuickActions from '../components/dashboard/QuickActions.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -35,7 +60,11 @@ onMounted(() => {
 })
 
 async function handleLogout() {
-  authStore.logout()
+  await authStore.logout()
   router.push({ name: 'login' })
+}
+
+function handleAction(action) {
+  console.log('Action:', action)
 }
 </script>

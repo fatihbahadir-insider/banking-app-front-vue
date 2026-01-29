@@ -16,7 +16,7 @@ const props = defineProps({
     type: String,
     default: 'primary',
     validator: (value) =>
-      ['primary', 'secondary', 'danger', 'outline'].includes(value),
+      ['primary', 'secondary', 'danger', 'outline', 'ghost'].includes(value),
   },
   size: {
     type: String,
@@ -31,16 +31,19 @@ const props = defineProps({
 
 const buttonClasses = computed(() => {
   const baseClasses =
-    'font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
+    'font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 transform hover:-translate-y-0.5 active:translate-y-0'
+
   const variantClasses = {
     primary:
-      'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 disabled:bg-gray-400',
+      'bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white hover:from-[#5a6fd6] hover:to-[#6a4190] hover:shadow-lg hover:shadow-purple-500/30 focus:ring-purple-500 disabled:from-gray-400 disabled:to-gray-500 disabled:hover:translate-y-0 disabled:hover:shadow-none',
     secondary:
-      'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500 disabled:bg-gray-400',
+      'bg-gradient-to-r from-gray-600 to-gray-700 text-white hover:from-gray-700 hover:to-gray-800 hover:shadow-lg hover:shadow-gray-500/30 focus:ring-gray-500 disabled:from-gray-400 disabled:to-gray-500 disabled:hover:translate-y-0',
     danger:
-      'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:bg-gray-400',
+      'bg-gradient-to-r from-red-500 to-pink-500 text-white hover:from-red-600 hover:to-pink-600 hover:shadow-lg hover:shadow-red-500/30 focus:ring-red-500 disabled:from-gray-400 disabled:to-gray-500 disabled:hover:translate-y-0',
     outline:
-      'border-2 border-blue-600 text-blue-600 hover:bg-blue-50 focus:ring-blue-500 disabled:border-gray-400 disabled:text-gray-400',
+      'border-2 border-[#667eea] text-[#667eea] hover:bg-gradient-to-r hover:from-[#667eea] hover:to-[#764ba2] hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-purple-500/30 focus:ring-purple-500 disabled:border-gray-400 disabled:text-gray-400 disabled:hover:bg-transparent disabled:hover:translate-y-0',
+    ghost:
+      'text-[#667eea] hover:bg-purple-50 focus:ring-purple-500 disabled:text-gray-400 disabled:hover:bg-transparent disabled:hover:translate-y-0',
   }
 
   const sizeClasses = {
