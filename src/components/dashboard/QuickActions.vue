@@ -1,41 +1,52 @@
 <template>
-  <div class="bg-white rounded-[16px] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
-    <h3 class="m-0 mb-6 text-[18px] font-semibold color-[#1a1a2e]">
-      Quick Actions
-    </h3>
+  <CustomCard shadow="md">
+    <template #header>
+      <h3 class="text-lg font-semibold text-gray-800">Quick Actions</h3>
+    </template>
+
     <div class="grid grid-cols-2 gap-3">
-      <button
-        class="flex flex-col items-center gap-2 p-5 b-none rounded-[12px] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0px_4px_12px_rgba(0,0,0,0.15)] active:translate-y-0 bg-gradient-to-r from-[#28a745] to-[#20c997] text-white"
+      <CustomButton
+        variant="primary"
+        size="lg"
+        class="flex-col gap-2 py-4"
         @click="$emit('action', 'deposit')"
       >
-        <span class="action-icon">📥</span>
-        <span class="action-label">Deposit</span>
-      </button>
-      <button
-        class="flex flex-col items-center gap-2 p-5 b-none rounded-[12px] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0px_4px_12px_rgba(0,0,0,0.15)] active:translate-y-0 bg-gradient-to-r from-[#dc3545] to-[#fd7e14] text-white"
+        <span>Deposit</span>
+      </CustomButton>
+
+      <CustomButton
+        variant="danger"
+        size="lg"
+        class="flex-col gap-2 py-4"
         @click="$emit('action', 'withdraw')"
       >
-        <span class="action-icon">📤</span>
-        <span class="action-label">Withdraw</span>
-      </button>
-      <button
-        class="flex flex-col items-center gap-2 p-5 b-none rounded-[12px] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0px_4px_12px_rgba(0,0,0,0.15)] active:translate-y-0 bg-gradient-to-r from-[#007bff] to-[#6610f2] text-white"
+        <span>Withdraw</span>
+      </CustomButton>
+
+      <CustomButton
+        variant="outline"
+        size="lg"
+        class="flex-col gap-2 py-4"
         @click="$emit('action', 'transfer')"
       >
-        <span class="action-icon">🔄</span>
-        <span class="action-label">Transfer</span>
-      </button>
-      <button
-        class="flex flex-col items-center gap-2 p-5 b-none rounded-[12px] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0px_4px_12px_rgba(0,0,0,0.15)] active:translate-y-0 bg-gradient-to-r from-[#6c757d] to-[#495057] text-white"
+        <span>Transfer</span>
+      </CustomButton>
+
+      <CustomButton
+        variant="secondary"
+        size="lg"
+        class="flex-col gap-2 py-4"
         @click="$emit('action', 'history')"
       >
-        <span class="action-icon">📋</span>
-        <span class="action-label">History</span>
-      </button>
+        <span>History</span>
+      </CustomButton>
     </div>
-  </div>
+  </CustomCard>
 </template>
 
 <script setup>
+import CustomCard from '../common/CustomCard.vue'
+import CustomButton from '../common/CustomButton.vue'
+
 defineEmits(['action'])
 </script>
