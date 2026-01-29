@@ -9,10 +9,10 @@
       <div
         v-for="user in users"
         :key="user.id"
-        class="flex items-center gap-4 p-4 bg-[#f8f9fa] rounded-[12px] transition-[transform,box-shadow] duration-200 hover:translate-x-1 hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
+        class="flex items-center gap-4 p-3 bg-[#f8f9fa] rounded-[12px] transition-[transform,box-shadow] duration-200 hover:translate-x-1 hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
       >
         <div
-          class="w-12 h-12 rounded-[50%] bg-gradient-to-r from-[#667eea] to-[#764ba2] flex items-center justify-center text-white font-semibold text-[14px]"
+          class="w-11 h-11 rounded-[50%] bg-gradient-to-r from-[#667eea] to-[#764ba2] flex items-center justify-center text-white font-semibold text-[14px]"
         >
           {{ user.username?.[0].toUpperCase() }}
         </div>
