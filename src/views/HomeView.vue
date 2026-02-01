@@ -22,7 +22,7 @@
       class="flex flex-col items-center justify-center min-h-[400px] gap-4"
     >
       <div
-        class="w-12 h-12 border border-[#e0e0e0] rounded-full animate-spin"
+        class="w-12 h-12 border-4 border-gray-200 border-t-[#667eea] rounded-full animate-spin"
       ></div>
       <p>Loading...</p>
     </div>
@@ -38,11 +38,24 @@
         <UsersList :users="dashboardStore.users" />
       </div>
     </div>
+
+    <TransactionModal
+      :is-open="isTransactionModalOpen"
+      :type="modalType"
+      :users="dashboardStore.users"
+      @close="isTransactionModalOpen = false"
+      @success="handleTransactionSuccess"
+    />
+
+    <HistoryModal
+      :is-open="isHistoryModalOpen"
+      @close="isHistoryModalOpen = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/useAuthStore'
 import { useDashboardStore } from '../stores/useDashboardStore'
@@ -50,10 +63,16 @@ import BalanceCard from '../components/dashboard/BalanceCard.vue'
 import UsersList from '../components/dashboard/UsersList.vue'
 import TransactionsList from '../components/dashboard/TransactionsList.vue'
 import QuickActions from '../components/dashboard/QuickActions.vue'
+import TransactionModal from '@/components/dashboard/TransactionModal.vue'
+import HistoryModal from '@/components/dashboard/HistoryModal.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const dashboardStore = useDashboardStore()
+
+const isTransactionModalOpen = ref(false)
+const isHistoryModalOpen = ref(false)
+const modalType = ref('deposit')
 
 onMounted(() => {
   dashboardStore.fetchAll()
@@ -65,6 +84,18 @@ async function handleLogout() {
 }
 
 function handleAction(action) {
-  console.log('Action:', action)
+  if (action === 'history') {
+    isHistoryModalOpen.value = true
+    return
+  }
+
+  modalType.value = action
+  isTransactionModalOpen.value = true
+}
+
+async function handleTransactionSuccess() {
+  isTransactionModalOpen.value = false
+  await dashboardStore.fetchBalance()
+  await dashboardStore.fetchTransactions()
 }
 </script>

@@ -29,3 +29,13 @@ export function formatAmount(transaction, userId) {
   }
   return amount
 }
+
+export function formatError(err) {
+  if (err.data && typeof err.data === 'object') {
+    const messages = Object.entries(err.data)
+      .map(([field, message]) => `${field}: ${message}`)
+      .join(', ')
+    return messages || err.message
+  }
+  return err.message || 'Failed'
+}

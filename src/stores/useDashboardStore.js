@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import api from '../services/api'
+import { formatError } from '@/utils/formatters'
 
 export const useDashboardStore = defineStore('dashboard', () => {
   const balance = ref(null)
@@ -48,12 +49,48 @@ export const useDashboardStore = defineStore('dashboard', () => {
     isLoading.value = false
   }
 
+  async function deposit(amount) {
+    try {
+      await api.post('/transactions/debit', { amount })
+      return true
+    } catch (err) {
+      error.value = formatError(err)
+      return false
+    }
+  }
+
+  async function withdraw(amount) {
+    try {
+      await api.post('/transactions/credit', { amount })
+      return true
+    } catch (err) {
+      error.value = formatError(err)
+      return false
+    }
+  }
+
+  async function transfer(amount, toUserId) {
+    try {
+      await api.post('/transactions/transfer', {
+        amount,
+        to_user_id: toUserId,
+      })
+      return true
+    } catch (err) {
+      error.value = formatError(err)
+      return false
+    }
+  }
+
   return {
     balance,
     users,
     transactions,
     isLoading,
     error,
+    deposit,
+    withdraw,
+    transfer,
     fetchBalance,
     fetchUsers,
     fetchTransactions,
